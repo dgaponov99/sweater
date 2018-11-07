@@ -1,1 +1,1 @@
-web: java -jar target/sweater-1.0-SNAPSHOT.jar --port $PORT
+web: java $JAVA_OPTS -jar target/sweater-1.0-SNAPSHOT.jar --server.port=$PORT $JAR_OPTS
