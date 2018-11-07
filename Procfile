@@ -1,1 +1,1 @@
-web: java -jar target/sweater-1.0-SNAPSHOT.jar
+web: java -jar target/sweater-1.0-SNAPSHOT.jar --port $PORT
