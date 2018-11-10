@@ -1,6 +1,8 @@
 package ru.dgaponov99.controller;
 
 
+import com.cloudinary.Cloudinary;
+import com.cloudinary.utils.ObjectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -25,6 +27,9 @@ import java.util.UUID;
 public class MainController {
     @Autowired
     private MessageRepo messageRepo;
+
+    @Autowired
+    private Cloudinary cloudinary;
 
     @Value("${upload.path}")
     private String uploadPath;
@@ -70,14 +75,21 @@ public class MainController {
                 if (!uploadDir.exists()) {
                     uploadDir.mkdir();
                 }
-
-                String uuidFile = UUID.randomUUID().toString();
+                /*String uuidFile = UUID.randomUUID().toString();
                 String resultFilename = uuidFile + "." + file.getOriginalFilename();
-                file.transferTo(new File(uploadPath + "/" + resultFilename));
-                message.setFilename(resultFilename);
+                File file1 = new File(uploadPath + "/" + resultFilename);*/
+                File file1 = new File(uploadPath + "/" + "image.jpg");
+                file.transferTo(file1);
+
+
+                Map image = cloudinary.uploader().upload(file1, ObjectUtils.emptyMap());
+                message.setFilename((String) image.get("url"));
+
+
             }
             model.addAttribute("message", null);
             messageRepo.save(message);
+
         }
         Iterable<Message> messages = messageRepo.findAll();
         model.addAttribute("messages", messages);
